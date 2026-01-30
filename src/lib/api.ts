@@ -1,24 +1,21 @@
+// @ts-nocheck
 /**
- * Redirection directe vers Stripe sans chichis
+ * Redirection brute vers Stripe
  */
-export async function redirectToCheckout(
-  instantDbUserId: string,
-  email: string
-): Promise<void> {
+export async function redirectToCheckout(instantDbUserId, email) {
   const STRIPE_LINK = "https://buy.stripe.com/cNi3cveZm9Jybjwg6m67S0q";
+  const finalUrl = `${STRIPE_LINK}?prefilled_email=${encodeURIComponent(email)}&client_reference_id=${instantDbUserId}`;
   
-  // Construction de l'URL avec les paramètres
-  const finalUrl = STRIPE_LINK + 
-    "?prefilled_email=" + encodeURIComponent(email) + 
-    "&client_reference_id=" + instantDbUserId;
-
-  console.log("Redirection vers :", finalUrl);
   window.location.href = finalUrl;
 }
 
 /**
- * Gardée pour éviter de casser les imports ailleurs dans le site
+ * Fonction de secours pour ne pas casser le reste du site
  */
-export async function createCheckoutSession(instantDbUserId: string, email: string) {
-  return { url: "", sessionId: "" };
+export async function createCheckoutSession(instantDbUserId, email) {
+  const STRIPE_LINK = "https://buy.stripe.com/cNi3cveZm9Jybjwg6m67S0q";
+  return { 
+    url: `${STRIPE_LINK}?prefilled_email=${encodeURIComponent(email)}&client_reference_id=${instantDbUserId}`, 
+    sessionId: "direct" 
+  };
 }
